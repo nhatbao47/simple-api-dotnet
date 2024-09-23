@@ -1,10 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Task = SimpleApi.Models.Task;
 
 namespace SimpleApi.Controllers
 {
-    public class TasksController(SimpleApiContext context) : MyControllerBase(context)
+    public class TasksController(SimpleApiContext context, IMapper mapper) : MyControllerBase(context, mapper)
     {
         // GET: api/Tasks
         [HttpGet]

@@ -1,32 +1,35 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SimpleApi.DTOs;
 using SimpleApi.Models;
 
 namespace SimpleApi.Controllers
 {
-    [Authorize]
-    public class SchedulesController(SimpleApiContext context) : MyControllerBase(context)
+    public class SchedulesController(SimpleApiContext context, IMapper mapper) : MyControllerBase(context, mapper)
     {
         // GET: api/Schedules
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetSchedules()
         {
-            return await _context.Schedules.ToListAsync();
+            var schedules = await _context.Schedules.Include(i => i.User).ToListAsync();
+            var scheduleDtos = _mapper.Map<IEnumerable<ScheduleDto>>(schedules);
+            return Ok(scheduleDtos);
         }
 
         // GET: api/Schedules/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Schedule>> GetSchedule(int id)
+        public async Task<ActionResult<ScheduleDto>> GetSchedule(int id)
         {
-            var schedule = await _context.Schedules.FindAsync(id);
+            var schedule = await _context.Schedules.Include(i => i.User).FirstOrDefaultAsync(d => d.Id == id);
 
             if (schedule == null)
             {
                 return NotFound();
             }
 
-            return schedule;
+            return Ok(_mapper.Map<ScheduleDto>(schedule));
         }
 
         // PUT: api/Schedules/5

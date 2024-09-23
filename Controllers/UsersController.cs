@@ -1,16 +1,17 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimpleApi.Models;
 
 namespace SimpleApi.Controllers
 {
-    public class UsersController(SimpleApiContext context) : MyControllerBase(context)
+    public class UsersController(SimpleApiContext context, IMapper mapper) : MyControllerBase(context, mapper)
     {
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Where(d => d.UserName != "admin").ToListAsync();
         }
 
         // GET: api/Users/5
