@@ -18,6 +18,15 @@ namespace SimpleApi.Controllers
             return Ok(scheduleDtos);
         }
 
+        // GET: api/Schedules/User
+        [HttpGet("User/{id}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetSchedulesByUser(int id)
+        {
+            var schedules = await _context.Schedules.Where(d => d.UserId == id).Include(i => i.User).ToListAsync();
+            var scheduleDtos = _mapper.Map<IEnumerable<ScheduleDto>>(schedules);
+            return Ok(scheduleDtos);
+        }
+
         // GET: api/Schedules/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ScheduleDto>> GetSchedule(int id)
@@ -35,17 +44,21 @@ namespace SimpleApi.Controllers
         // PUT: api/Schedules/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSchedule(int id, Schedule schedule)
+        public async Task<IActionResult> PutSchedule(int id, ScheduleDto schedule)
         {
             if (id != schedule.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(schedule).State = EntityState.Modified;
+            var updateItem = await _context.Schedules.FindAsync(schedule.Id);
+            if (updateItem == null) {
+                return NotFound();
+            }
 
             try
             {
+                _mapper.Map(schedule, updateItem);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -66,12 +79,15 @@ namespace SimpleApi.Controllers
         // POST: api/Schedules
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Schedule>> PostSchedule(Schedule schedule)
+        public async Task<ActionResult<ScheduleDto>> PostSchedule(ScheduleDto schedule)
         {
-            _context.Schedules.Add(schedule);
+            var newSchedule = new Schedule();
+            _mapper.Map(schedule, newSchedule);
+
+            _context.Schedules.Add(newSchedule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetSchedule), new { id = schedule.Id }, schedule);
+            return CreatedAtAction(nameof(GetSchedule), new { id = newSchedule.Id }, newSchedule);
         }
 
         // DELETE: api/Schedules/5

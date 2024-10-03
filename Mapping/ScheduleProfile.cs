@@ -8,5 +8,6 @@ public class ScheduleProfile: Profile
     {
         CreateMap<Schedule, ScheduleDto>()
             .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.User.FullName));
+        CreateMap<ScheduleDto, Schedule>();
     }
 }
