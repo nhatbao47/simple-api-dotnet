@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - main  # Change this to your default branch
+      - main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -10,7 +10,7 @@ steps:
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
-      version: '8.x'  # Specify .NET Core 8 SDK version
+      version: '8.x'
       installationPath: $(Agent.ToolsDirectory)/dotnet
 
   - script: |
@@ -35,7 +35,7 @@ steps:
 
   - task: AzureWebApp@1
     inputs:
-      azureSubscription: 'Azure Vue Workshop'  # Replace with your Azure subscription name
-      appType: 'webApp'  # Or 'functionApp'
-      appName: 'simple-api-dotnet'  # Replace with your Azure Web App name
-      package: '$(Build.ArtifactStagingDirectory)/**/*'  # Path to the published output
+      azureSubscription: 'Azure Vue Workshop'
+      appType: 'webAppLinux'
+      appName: 'simple-api-dotnet'
+      package: '$(Build.ArtifactStagingDirectory)/**/*'
