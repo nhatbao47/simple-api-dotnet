@@ -32,6 +32,10 @@ steps:
       zip -r app.zip ./*  # Create a ZIP of the published output
     displayName: 'Create ZIP of Published Files'
 
+  - script: |
+      unzip -l $(Build.ArtifactStagingDirectory)/app.zip  # List contents of the ZIP file
+    displayName: 'List ZIP Contents'
+
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
