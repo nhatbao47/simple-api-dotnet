@@ -32,10 +32,3 @@ steps:
       azureSubscription: 'Azure Vue Workshop'
       appName: 'simple-api-dotnet'
       package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
-
-  - task: AzureWebApp@1
-    inputs:
-      azureSubscription: 'Azure Vue Workshop'
-      appType: 'webAppLinux'
-      appName: 'simple-api-dotnet'
-      package: '$(Build.ArtifactStagingDirectory)/app.zip'
