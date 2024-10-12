@@ -27,9 +27,14 @@ steps:
       ls -la $(Build.ArtifactStagingDirectory)  # List files for verification
     displayName: 'List Published Files'
 
+  - script: |
+      cd $(Build.ArtifactStagingDirectory)
+      zip -r app.zip ./*  # Create a ZIP of the published output
+    displayName: 'Create ZIP of Published Files'
+
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
       ArtifactName: 'drop'
       publishLocation: 'Container'
 
@@ -38,4 +43,4 @@ steps:
       azureSubscription: 'Azure Vue Workshop'
       appType: 'webAppLinux'
       appName: 'simple-api-dotnet'
-      package: '$(Build.ArtifactStagingDirectory)/**/*'
+      package: '$(Build.ArtifactStagingDirectory)/app.zip'
