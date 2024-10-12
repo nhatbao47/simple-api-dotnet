@@ -6,6 +6,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
   - task: UseDotNet@2
     inputs:
@@ -15,32 +18,20 @@ steps:
 
   - script: |
       dotnet restore
-      dotnet build --configuration Release
-    displayName: 'Restore and Build'
+      dotnet build --configuration $(buildConfiguration)
+    displayName: 'Restore and Build $(buildConfiguration)'
 
-  - script: |
-      dotnet publish --configuration Release --output $(Build.ArtifactStagingDirectory)
-    displayName: 'Publish'
-
-  - script: |
-      echo "Listing published files:"
-      ls -la $(Build.ArtifactStagingDirectory)  # List files for verification
-    displayName: 'List Published Files'
-
-  - script: |
-      cd $(Build.ArtifactStagingDirectory)
-      zip -r app.zip ./*  # Create a ZIP of the published output
-    displayName: 'Create ZIP of Published Files'
-
-  - script: |
-      unzip -l $(Build.ArtifactStagingDirectory)/app.zip  # List contents of the ZIP file
-    displayName: 'List ZIP Contents'
-
-  - task: PublishBuildArtifacts@1
+  - task: DotNetCoreCLI@2
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/app.zip'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
+      command: 'publish'
+      arguments: '--configuration $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/Output'
+      publishWebProjects: true
+
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'Azure Vue Workshop'
+      appName: 'simple-api-dotnet'
+      package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
 
   - task: AzureWebApp@1
     inputs:
