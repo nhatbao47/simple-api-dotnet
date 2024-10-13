@@ -15,7 +15,7 @@ steps:
     inputs:
       version: '8.x'
       performMultiLevelLookup: true
-      includePreviewVersions: true # Required for preview
+      includePreviewVersions: true
 
   - script: |
       dotnet restore
@@ -24,18 +24,13 @@ steps:
 
   - task: DotNetCoreCLI@2
     inputs:
-      command: publish
+      command: 'publish'
       publishWebProjects: True
-      arguments: '--configuration $(BuildConfiguration)'
+      arguments: '--configuration $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/Output'
       zipAfterPublish: True
-
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)' 
-      artifactName: 'drop'
 
   - task: AzureWebApp@1
     inputs:
       azureSubscription: 'Azure Vue Workshop'
       appName: 'simple-api-dotnet'
-      package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+      package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
