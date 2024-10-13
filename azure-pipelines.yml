@@ -23,6 +23,7 @@ steps:
     displayName: 'Restore and Build $(buildConfiguration)'
 
   - task: DotNetCoreCLI@2
+    displayName: 'Publish'
     inputs:
       command: 'publish'
       publishWebProjects: True
