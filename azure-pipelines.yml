@@ -7,8 +7,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+- name: buildConfiguration
+  value: 'Release'
 - group: SimpleVue
-  buildConfiguration: 'Release'
 
 steps:
   - task: UseDotNet@2
