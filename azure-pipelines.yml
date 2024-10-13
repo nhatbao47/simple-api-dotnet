@@ -11,10 +11,11 @@ variables:
 
 steps:
   - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
     inputs:
-      packageType: 'sdk'
       version: '8.x'
-      installationPath: $(Agent.ToolsDirectory)/dotnet
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview
 
   - script: |
       dotnet restore
@@ -23,12 +24,18 @@ steps:
 
   - task: DotNetCoreCLI@2
     inputs:
-      command: 'publish'
-      arguments: '--configuration $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/Output'
-      publishWebProjects: true
+      command: publish
+      publishWebProjects: True
+      arguments: '--configuration $(BuildConfiguration)'
+      zipAfterPublish: True
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)' 
+      artifactName: 'drop'
 
   - task: AzureWebApp@1
     inputs:
       azureSubscription: 'Azure Vue Workshop'
       appName: 'simple-api-dotnet'
-      package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
+      package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
