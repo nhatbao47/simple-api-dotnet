@@ -1,6 +1,3 @@
-variables:
-- group: SimpleVue
-
 trigger:
   branches:
     include:
@@ -10,6 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+- group: SimpleVue
   buildConfiguration: 'Release'
 
 steps:
