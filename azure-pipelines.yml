@@ -1,3 +1,6 @@
+variables:
+- group: SimpleVue
+
 trigger:
   branches:
     include:
@@ -32,6 +35,6 @@ steps:
 
   - task: AzureWebApp@1
     inputs:
-      azureSubscription: 'Azure Vue Workshop'
-      appName: 'simple-api-dotnet'
+      azureSubscription: '$(service_connection)'
+      appName: '$(app_name)'
       package: '$(Build.ArtifactStagingDirectory)/Output/**/*.zip'
