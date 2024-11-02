@@ -28,7 +28,7 @@ public static class SeedData
             );
 
             context.Users.AddRange(
-                new User {UserName = "admin", FullName = "Administrator", Title = "Boss", Password = "Ghsdy213"},
+                new User {UserName = "admin", FullName = "Administrator", Title = "Boss", Password = "Abcd123"},
                 new User {UserName = "user1", FullName = "David Nguyen", Title = "Developer"},
                 new User {UserName = "user2", FullName = "Peter Pham", Title = "QC"},
                 new User {UserName = "user3", FullName = "Lina Ngo", Title = "QA"}
