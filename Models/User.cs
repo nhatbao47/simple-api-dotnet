@@ -7,5 +7,5 @@ public class User
     public string? Password { get; set;}
     public string? FullName { get; set;}
     public string? Title { get; set;}
-    public ICollection<Schedule> Schedules { get; set; }
+    public ICollection<Schedule>? Schedules { get; set; }
 }
